@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const NoticeShema = new Schema({
+const NoticeSchema = new Schema({
      name: {
           type: String,
           required: true
@@ -22,4 +22,4 @@ const NoticeShema = new Schema({
      timestamps: true
 });
 
-module.exports = mongoose.model('Notice', NoticeShema);
+module.exports = mongoose.model('Notice', NoticeSchema);

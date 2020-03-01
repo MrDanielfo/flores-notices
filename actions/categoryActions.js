@@ -17,7 +17,27 @@ const createCategory = async (category) => {
      }
 }
 
+const updateCategory = async (filter, update) => {
+     try {
+          const categoryUpdated = Category.findOneAndUpdate(filter, update, { new: true });
+          return categoryUpdated;
+     } catch (err) {
+          console.log(err);
+     }
+}
+
+const deleteCategory = async (filter) => {
+     try {
+          const deleteCategory = Category.findOneAndDelete(filter);
+          return await deleteCategory;
+     } catch (err) {
+          console.log(err);
+     }
+}
+
 module.exports = {
      getAllCategories,
-     createCategory
+     createCategory,
+     updateCategory,
+     deleteCategory
 }

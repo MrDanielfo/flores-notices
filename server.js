@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 require('dotenv').config({ path: 'variables.env' });
 
+const { getCurrentUser } = require('./actions/userActions');
+
 // Apollo Server
 const { ApolloServer } = require('apollo-server');
 // Resolvers and TypeDefs
@@ -21,7 +23,8 @@ const PORT = process.env.PORT || 5000;
 
 const server = new ApolloServer({
      typeDefs,
-     resolvers
+     resolvers,
+     context: async ({ req }) => await getCurrentUser(req)
 });
 
 server.listen(PORT).then(({url}) => console.log(`🚀  Server ready at ${url}`));

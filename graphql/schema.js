@@ -4,8 +4,8 @@ const typeDefs = gql`
      type User {
           _id: ID
           name: String! 
-          surname: String!
           email: String!
+          username: String!
           password: String!
           notices: [Notice]
      }
@@ -30,33 +30,46 @@ const typeDefs = gql`
 
      input RegisterInput {
           name: String!
-          surname: String!
           email: String! 
+          username: String!
           password: String! 
+     }
+
+     input UpdateUserInput {
+          name: String!
+          username: String!
+          password: String
      }
 
      input CategoryInput {
           name: String! 
-          description: String!
+          description: String
      }
 
      input NoticeInput {
           name: String! 
-          body: String! 
-          userId: ID
-          categoryId: ID
+          body: String 
+          userId: ID!
+          categoryId: ID!
      }
 
      type Query {
           getUsers: [User]
+          getUser(email: String!): User
           getNotices: [Notice]
           getCategories: [Category]
      }
 
      type Mutation {
           addUser(data: RegisterInput): Token
+          updateUser(data: UpdateUserInput!, email: String!): User
           addCategory(data: CategoryInput): Category
+          updateCategory(data: CategoryInput!, categoryId: ID!): Category
+          deleteCategory(categoryId: ID!): Category
           addNotice(data: NoticeInput): Notice
+          updateNotice(data: NoticeInput!, noticeId: ID!): Notice
+          deleteNotice(noticeId: ID!): Notice
+          
      }
 `;
 

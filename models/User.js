@@ -7,11 +7,11 @@ const UserSchema = new Schema({
           type: String,
           required: true
      },
-     surname: {
+     email: {
           type: String,
           required: true
      },
-     email: {
+     username: {
           type: String,
           required: true,
           unique: true
@@ -44,5 +44,6 @@ UserSchema.pre('save', function(next) {
      })
 
 });
+
 
 module.exports = mongoose.model('User', UserSchema);
