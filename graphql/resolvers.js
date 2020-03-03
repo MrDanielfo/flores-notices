@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs');
-const { getAllUsers, createUser, getUser, createToken, updateUser } = require('../actions/userActions');
+const { getAllUsers, createUser, getUser, createToken, updateUser, checkPassword, getUserLogin } = require('../actions/userActions');
 const { getAllCategories, createCategory, updateCategory, deleteCategory } = require('../actions/categoryActions');
 const { getAllNotices, createNotice, updateNotice, deleteNotice } = require('../actions/noticeActions');
 
@@ -37,17 +37,43 @@ const resolvers = {
      Mutation: {
           addUser: async (parent, { data }, context, info) => {
                try {
-                    console.log(data);
+                    // console.log(data);
+
+                    if (data.password.length <= 5) {
+                         throw new Error('Password must contains 6 of more characters');
+                    }
+
                     const user = await getUser(data.username);
+                    data.role = 'User';
                     // console.log(user);
                     if (user) {
                          throw new Error('User already exist');
-                    } 
-
+                    }
+                    
                     const newUser = createUser(data);
                     return { token: createToken(newUser, process.env.SECRET, '1hr') }
                    
   
+               } catch (err) {
+                    console.log(err);
+               }
+          },
+          loginUser: async (parent, { data }, context, info) => {
+               try {
+                    const user = await getUserLogin(data.email);
+                    if (!user) {
+                         throw new Error('Bad Credentials')
+                    }
+
+                    return checkPassword(data.password, user.password).then(data => {
+                         try {
+                              if (!data) throw new Error('Bad Credentials');
+                              return { token: createToken(user, process.env.SECRET, '1hr') }
+                         } catch (err) {
+                              console.log(err);
+                         }
+                    })
+
                } catch (err) {
                     console.log(err);
                }

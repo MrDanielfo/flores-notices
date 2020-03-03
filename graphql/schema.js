@@ -1,12 +1,20 @@
 const { gql } = require('apollo-server');
 
 const typeDefs = gql`
+
+     enum Role {
+          SuperAdmin
+          Admin
+          User
+     }
+
      type User {
           _id: ID
           name: String! 
           email: String!
           username: String!
           password: String!
+          role: Role
           notices: [Notice]
      }
 
@@ -35,10 +43,19 @@ const typeDefs = gql`
           password: String! 
      }
 
+     input LoginInput {
+          email: String!
+          password: String!
+     }
+
      input UpdateUserInput {
           name: String!
           username: String!
           password: String
+     }
+
+     input UpdateAdminInput {
+          role: Role
      }
 
      input CategoryInput {
@@ -62,6 +79,7 @@ const typeDefs = gql`
 
      type Mutation {
           addUser(data: RegisterInput): Token
+          loginUser(data: LoginInput): Token
           updateUser(data: UpdateUserInput!, email: String!): User
           addCategory(data: CategoryInput): Category
           updateCategory(data: CategoryInput!, categoryId: ID!): Category

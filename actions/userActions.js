@@ -1,10 +1,11 @@
 require('dotenv').config({'path': 'variables.env'})
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 const createToken = (user, secret, expiresIn) => {
-     const  { name, surname, email } = user;
-     return jwt.sign({name, surname, email}, secret, {expiresIn});
+     const  { username, role, email } = user;
+     return jwt.sign({username, role, email}, secret, {expiresIn});
 }
 
 const getCurrentUser = (req) => {
@@ -43,6 +44,14 @@ const getUser = async (username) => {
      }
 }
 
+const getUserLogin = async (email) => {
+     try {
+          return await User.findOne({ email });
+     } catch (err) {
+          console.log(err);
+     }
+}
+
 const createUser = async (user) => {
      try {
           const userCreated = await User.create(user);
@@ -61,11 +70,26 @@ const updateUser = async (filter, update) => {
      }
 }
 
+const checkPassword = async (password, userPassword) => {
+     try {
+          const isValidPassword = await bcrypt.compare(password, userPassword);
+          if (!isValidPassword) {
+               return false;
+          }
+          return true;
+
+     } catch (err) {
+          console.log(err);
+     }
+}
+
 module.exports = {
      getAllUsers,
      createUser,
      getUser,
      createToken,
      getCurrentUser,
-     updateUser
+     updateUser,
+     checkPassword,
+     getUserLogin
 }

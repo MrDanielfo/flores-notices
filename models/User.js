@@ -20,6 +20,10 @@ const UserSchema = new Schema({
           type: String,
           required: true
      },
+     role: {
+          type: String,
+          required: true
+     },
      notices: {
           type: [Schema.Types.ObjectId],
           ref: 'Notice'
